@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>News Package</title>
+    <meta name="description" content="In social media, the news articles choose you but in our app, you choose the news articles">
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="static/css/Footer-Basic.css">
+    <link rel="stylesheet" href="static/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="static/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/setNewsArticles.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container"><img src="static/img/newspapers-and-news-illustration.png" width="50"><a class="navbar-brand" href="#">News Package!</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/userprofile">Your Profile</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('mainform')" href="/newsarticles">Your Work Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('')" href="/#">Your Leisure Reads</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Placeholder Dropdown </a>
+                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
+                    </li>
+                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span></div>
+        </div>
+    </nav>
+    <form>
+        <div class="table-responsive" id="article-1" style="margin-top: 20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th id="article-title-1" colspan="0">News Article Title 1 (Certainty Factor)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a id="article-link-1" href="www.articlelink.com" style="margin-left: 5px;">Link to article</a>
+                            <input class="form-control topic" type="text" id="article-topic-1" readonly="" name="Topic" value="News Topic (Date)">
+                            <div role="tablist" id="article-accordion-1">
+                                <div class="card">
+                                    <div class="card-header" role="tab">
+                                        <h6 class="mb-0"><a class="text-lowercase" data-toggle="collapse" aria-expanded="true" aria-controls="article-accordion-1 .item-1" href="#article-accordion-1 .item-1">See More ...</a></h6>
+                                    </div>
+                                    <div class="collapse show item-1" role="tabpanel" data-parent="#article-accordion-1">
+                                        <div class="card-body">
+                                            <p class="card-text keyword" id="article-keyword-1" style="font-style: italic;">Keyword1, Keyword2, Keyword3, ...</p>
+                                            <p class="card-text summary" id="article-summary-1">Article Summary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" id="article-2" style="margin-top: 20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th id="article-title-2" colspan="0">News Article Title 1 (Certainty Factor)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a id="article-link-2" href="www.articlelink.com" style="margin-left: 5px;">Link to article</a>
+                            <input class="form-control topic" type="text" id="article-topic-2" readonly="" name="Topic" value="News Topic (Date)">
+                            <div role="tablist" id="article-accordion-2">
+                                <div class="card">
+                                    <div class="card-header" role="tab">
+                                        <h6 class="mb-0"><a class="text-lowercase" data-toggle="collapse" aria-expanded="false" aria-controls="article-accordion-2 .item-1" href="#article-accordion-2 .item-1">See More ...</a></h6>
+                                    </div>
+                                    <div class="collapse item-1" role="tabpanel" data-parent="#article-accordion-2">
+                                        <div class="card-body">
+                                            <p class="card-text keyword" id="article-keyword-2" style="font-style: italic;">Keyword1, Keyword2, Keyword3, ...</p>
+                                            <p class="card-text summary" id="article-summary-2">Article Summary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" id="article-3" style="margin-top: 20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th id="article-title-3" colspan="0">News Article Title 1 (Certainty Factor)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a id="article-link-3" href="www.articlelink.com" style="margin-left: 5px;">Link to article</a>
+                            <input class="form-control topic" type="text" id="article-topic-3" readonly="" name="Topic" value="News Topic (Date)">
+                            <div role="tablist" id="article-accordion-3">
+                                <div class="card">
+                                    <div class="card-header" role="tab">
+                                        <h6 class="mb-0"><a class="text-lowercase" data-toggle="collapse" aria-expanded="false" aria-controls="article-accordion-3 .item-1" href="#article-accordion-3 .item-1">See More ...</a></h6>
+                                    </div>
+                                    <div class="collapse item-1" role="tabpanel" data-parent="#article-accordion-3">
+                                        <div class="card-body">
+                                            <p class="card-text keyword" id="article-keyword-3" style="font-style: italic;">Keyword1, Keyword2, Keyword3, ...</p>
+                                            <p class="card-text summary" id="article-summary-3">Article Summary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" id="article-4" style="margin-top: 20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th id="article-title-4" colspan="0">News Article Title 1 (Certainty Factor)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a id="article-link-4" href="www.articlelink.com" style="margin-left: 5px;">Link to article</a>
+                            <input class="form-control topic" type="text" id="article-topic-4" readonly="" name="Topic" value="News Topic (Date)">
+                            <div role="tablist" id="article-accordion-4">
+                                <div class="card">
+                                    <div class="card-header" role="tab">
+                                        <h6 class="mb-0"><a class="text-lowercase" data-toggle="collapse" aria-expanded="false" aria-controls="article-accordion-4 .item-1" href="#article-accordion-4 .item-1">See More ...</a></h6>
+                                    </div>
+                                    <div class="collapse item-1" role="tabpanel" data-parent="#article-accordion-4">
+                                        <div class="card-body">
+                                            <p class="card-text keyword" id="article-keyword-4" style="font-style: italic;">Keyword1, Keyword2, Keyword3, ...</p>
+                                            <p class="card-text summary" id="article-summary-4">Article Summary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" id="article-5" style="margin-top: 20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th id="article-title-5" colspan="0">News Article Title 1 (Certainty Factor)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a id="article-link-5" href="www.articlelink.com" style="margin-left: 5px;">Link to article</a>
+                            <input class="form-control topic" type="text" id="article-topic-5" readonly="" name="Topic" value="News Topic (Date)">
+                            <div role="tablist" id="article-accordion-5">
+                                <div class="card">
+                                    <div class="card-header" role="tab">
+                                        <h6 class="mb-0"><a class="text-lowercase" data-toggle="collapse" aria-expanded="false" aria-controls="article-accordion-5 .item-1" href="#article-accordion-5 .item-1">See More ...</a></h6>
+                                    </div>
+                                    <div class="collapse item-1" role="tabpanel" data-parent="#article-accordion-5">
+                                        <div class="card-body">
+                                            <p class="card-text keyword" id="article-keyword-5" style="font-style: italic;">Keyword1, Keyword2, Keyword3, ...</p>
+                                            <p class="card-text summary" id="article-summary-5">Article Summary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div role="tablist" id="accordion-1" style="margin-top: 50px;">
+            <div class="card">
+                <div class="card-header" role="tab">
+                    <h6 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Other Articles</a></h6>
+                </div>
+                <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item"><a id="article-link-6" href="#">Other article (to contain title and url)</a></li>
+                            <li class="list-group-item"><a id="article-link-7" href="#">Other article (to contain title and url)</a></li>
+                            <li class="list-group-item"><a id="article-link-8" href="#">Other article (to contain title and url)</a></li>
+                            <li class="list-group-item"><a id="article-link-9" href="#">Other article (to contain title and url)</a></li>
+                            <li class="list-group-item"><a id="article-link-10" href="#">Other article (to contain title and url)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="footer-basic">
+        <footer>
+            <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Home</a></li>
+                <li class="list-inline-item"><a href="#">Services</a></li>
+                <li class="list-inline-item"><a href="#">About</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+            </ul>
+            <p class="copyright">News Package! © 2020<br></p>
+        </footer>
+    </div>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        var articles = {{ articles }};
+        setNewsArticles(articles);
+    </script>
+</body>
+
+</html>

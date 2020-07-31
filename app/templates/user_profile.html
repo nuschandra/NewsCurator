@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>News Package</title>
+    <meta name="description" content="In social media, the news articles choose you but in our app, you choose the news articles">
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="static/css/Footer-Basic.css">
+    <link rel="stylesheet" href="static/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="static/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/loader.css">
+
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/newsTopics.js"></script>
+    <script type="text/javascript" src="static/js/newsSources.js"></script>
+    <script type="text/javascript" src="static/js/prefences.js"></script>
+    <script type="text/javascript" src="static/js/setUserProfile.js"></script>
+    <script type="text/javascript" src="static/js/loadingScreen.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container"><img src="static/img/newspapers-and-news-illustration.png" width="50"><a class="navbar-brand" href="#">News Package!</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/userprofile">Your Profile</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('mainform')" href="/newsarticles">Your Work Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('')" href="/userprofile">Your Leisure Reads</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Placeholder Dropdown </a>
+                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
+                    </li>
+                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span></div>
+        </div>
+    </nav>
+    <div id="loader" style="display: none">
+        <div>
+            <span>↓</span>
+            <span style="--delay: 0.1s">↓</span>
+            <span style="--delay: 0.3s">↓</span>
+            <span style="--delay: 0.4s">↓</span>
+            <span style="--delay: 0.5s">↓</span>
+        </div>
+    </div>
+    <form id="mainform" onSubmit="convertJson()" action="" method="">
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Email<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="form-control email" type="email" value="youremail@domain.com" name="userEmail" placeholder="youremail@domain.com" autocomplete="on" required=""></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>YOUR AGE, PLEASE.<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="form-control age" type="number" min="12" max="150" step="1" name="age" placeholder="18" required="" value="18"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th colspan="3">SELECT TOPIC'S RELEVANCE TO YOUR PROFESSION.<br></th>
+                    </tr>
+                </thead>
+                <tbody id="workTopicsTable"></tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th colspan="3">SELECT TOPIC'S RELEVANCE TO YOUR LEISURE ACTIVITIES.<br></th>
+                    </tr>
+                </thead>
+                <tbody id="leisureTopicsTable"></tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>How much time (in minutes) do you spend to read an article?<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="form-control readingTime" type="number" name="readingTime" min="5" max="100" step="1" placeholder="5" required="" value="5"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Want to catch up on past news also?&nbsp;<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select class="form-control general" name="pastNewsPref"></select></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Like to know more about local news?<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select class="form-control general" name="localNewsPref"></select></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Like to see trending news?<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select class="form-control general" name="trendingNewsPref"></select></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th colspan="3">WHICH NEW SOURCES APPEALS TO YOU MOST?<br></th>
+                    </tr>
+                </thead>
+                <tbody id="newsSourceTable"></tbody>
+            </table>
+        </div>
+        <button class="btn btn-primary" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="save">Save</button>
+<!--        <button class="btn btn-primary" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="saveAndSubmit">Save</button>-->
+        <div class="custom-control custom-control-inline custom-switch" style="float: right;margin-top: 5px;">
+            <input class="custom-control-input" type="checkbox" id="formCheck-1" name="fetchArticles" value="true" checked="">
+            <label class="custom-control-label" for="formCheck-1">Fetch Articles on Save</label>
+        </div>
+    </form>
+    <div class="footer-basic">
+        <footer>
+            <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Home</a></li>
+                <li class="list-inline-item"><a href="#">Services</a></li>
+                <li class="list-inline-item"><a href="#">About</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+            </ul>
+            <p class="copyright">News Package! © 2020</p>
+        </footer>
+    </div>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        var newsTopics = {{ newsTopics }};
+        addNewsTopics(newsTopics);
+
+        var sources = null;
+        addNewSources(sources);
+
+        var pref = {{ topicPref }};
+        setPreferences(pref, ".form-control.topics");
+
+        pref = {{ generalPref }};
+        setPreferences(pref, ".form-control.general");
+
+        pref = {{ srcPref }};
+        setPreferences(pref, ".form-control.source");
+
+        var userprofile = {{ userprofile }};
+        setUserprofile(userprofile);
+    </script>
+</body>
+
+</html>
