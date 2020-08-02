@@ -16,8 +16,32 @@
 
 #loader div {
   display: flex;
-  height: 100vh;
-  align-items: center;
+  height: 50vh;
+  align-items: flex-end;
   justify-content: center;
+}
+
+#loader-text div {
+  display: flex;
+  height: 50vh;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+#loader-text strong {
+  animation: color-change 1s infinite;
+}
+
+@keyframes color-change {
+  0% {
+    color: black;
+  }
+  50% {
+    color: blue;
+  }
+  100% {
+    color: black;
+  }
 }
 

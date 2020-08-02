@@ -1,5 +1,5 @@
 from app import app
-from flask import request, Markup, render_template, jsonify
+from flask import request, Markup, render_template, jsonify, session
 from app.business import cf_data
 from app.model.user_preferences import UserPreferences, UserPreferencesSchema
 from app.model.user_preferences import UserPreferences, UserPreferencesSchema
@@ -30,9 +30,9 @@ def showUserProfile():
     userprofileJson = "null" if userprofile == None else userprofile.getJsonStr()
 
     return render_template("user_profile.html", newsTopics=Markup(news_topics),
-                           topicPref=Markup(topic_preferences), generalPref=Markup(general_preferences), 
+                           topicPref=Markup(topic_preferences), generalPref=Markup(general_preferences),
                            srcPref=Markup(source_preferences),
-                           userprofile=Markup(userprofileJson))
+                           userprofile=Markup(userprofileJson), userEmail=app.newsapp_active_user)
 
 @app.route("/newsarticles", methods = ["GET"])
 def showNewsArticles():
@@ -45,4 +45,17 @@ def showNewsArticles():
         else:
             articlesJson = "null"
 
-        return render_template("newsarticles.html", articles=Markup(articlesJson))
+        return render_template("newsarticles.html", articles=Markup(articlesJson), userEmail=app.newsapp_active_user)
+
+@app.route("/")
+@app.route("/login", methods=["POST", "GET"])
+def showLogin():
+    if request.method == "POST":
+        if request.form["submitBtn"] == "signIn":
+            session["USEREMAIL"] = request.form["email"]
+            app.newsapp_active_user = session["USEREMAIL"]
+        elif request.form["submitBtn"] == "signOut":
+            session.pop("USEREMAIL", None)
+            app.newsapp_active_user = ""
+
+    return render_template("login.html", userEmail=app.newsapp_active_user)

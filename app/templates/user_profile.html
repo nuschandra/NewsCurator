@@ -28,22 +28,34 @@
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/userprofile">Your Profile</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('mainform')" href="/newsarticles">Your Work Reads</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('')" href="/userprofile">Your Leisure Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/userProfile">Your Profile</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('', 'mainform')" href="/newsarticles">Your Work Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('', '')" href="/#">Your Leisure Reads</a></li>
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Placeholder Dropdown </a>
                         <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
                     </li>
-                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span></div>
+                </ul>
+                <span class="navbar-text actions">
+                    <a id="userEmail" style="margin-right: 10px;" class="userEmail" href="#">{{ userEmail }}</a>
+                    <a id="loginBtn" class="btn btn-light action-button" role="button" href="/login">
+                        <img id="loginIcon" width="18" height="18" src="static/img/login.png">
+                    </a>
+                </span>
+            </div>
         </div>
     </nav>
-    <div id="loader" style="display: none">
-        <div>
-            <span>↓</span>
-            <span style="--delay: 0.1s">↓</span>
-            <span style="--delay: 0.3s">↓</span>
-            <span style="--delay: 0.4s">↓</span>
-            <span style="--delay: 0.5s">↓</span>
+    <div id="loadingScreen" style="display: none;">
+        <div id="loader">
+            <div>
+            <span class="loader">↓</span>
+            <span class="loader" style="--delay: 0.1s;">↓</span>
+            <span class="loader" style="--delay: 0.3s;">↓</span>
+            <span class="loader" style="--delay: 0.4s;">↓</span>
+            <span class="loader" style="--delay: 0.5s;">↓</span>
+	        </div>
+        </div>
+        <div id="loader-text">
+            <div><strong>Scouring The Web For Your Articles</strong></div>
         </div>
     </div>
     <form id="mainform" onSubmit="convertJson()" action="" method="">
@@ -56,7 +68,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><input class="form-control email" type="email" value="youremail@domain.com" name="userEmail" placeholder="youremail@domain.com" autocomplete="on" required=""></td>
+                        <td><input class="form-control email" type="email" name="userEmail" placeholder="youremail@domain.com" autocomplete="on" required="" value={{ userEmail }}></td>
                     </tr>
                 </tbody>
             </table>
@@ -161,7 +173,7 @@
                 <tbody id="newsSourceTable"></tbody>
             </table>
         </div>
-        <button class="btn btn-primary" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="save">Save</button>
+        <button id="saveProfileBtn" class="btn btn-primary" onclick="showLoading('saveProfileBtn', 'mainform')" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="save">Save</button>
 <!--        <button class="btn btn-primary" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="saveAndSubmit">Save</button>-->
         <div class="custom-control custom-control-inline custom-switch" style="float: right;margin-top: 5px;">
             <input class="custom-control-input" type="checkbox" id="formCheck-1" name="fetchArticles" value="true" checked="">
@@ -201,6 +213,8 @@
 
         var userprofile = {{ userprofile }};
         setUserprofile(userprofile);
+
+        toggleLoginIcon();
     </script>
 </body>
 
