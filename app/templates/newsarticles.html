@@ -15,6 +15,7 @@
 
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/setNewsArticles.js"></script>
+    <script type="text/javascript" src="static/js/loadingScreen.js"></script>
 </head>
 
 <body>
@@ -23,13 +24,20 @@
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/userprofile">Your Profile</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('mainform')" href="/newsarticles">Your Work Reads</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('')" href="/#">Your Leisure Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/userProfile">Your Profile</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('', 'mainform')" href="/newsarticles">Your Work Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" onclick="showLoading('', '')" href="/#">Your Leisure Reads</a></li>
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Placeholder Dropdown </a>
                         <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
                     </li>
-                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span></div>
+                </ul>
+                <span class="navbar-text actions">
+                    <a id="userEmail" style="margin-right: 10px;" class="userEmail" href="#">{{ userEmail }}</a>
+                    <a id="loginBtn" class="btn btn-light action-button" role="button" href="/login">
+                        <img id="loginIcon" width="18" height="18" src="static/img/login.png">
+                    </a>
+                </span>
+            </div>
         </div>
     </nav>
     <form>
@@ -220,6 +228,8 @@
     <script>
         var articles = {{ articles }};
         setNewsArticles(articles);
+
+        toggleLoginIcon();
     </script>
 </body>
 
