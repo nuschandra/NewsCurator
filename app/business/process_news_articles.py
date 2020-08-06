@@ -12,7 +12,7 @@ class ProcessNewsArticles:
     def __init__(self):
         self.__userProfilesDB = {}
 
-    def calculateAgeOfNews(currentHeadlines):
+    def calculateAgeOfNews(self, currentHeadlines):
         publishedAt = currentHeadlines["publishedAt"].split('T')[0]
         publishedYear = int(publishedAt.split('-')[0])
         publishedMonth = int(publishedAt.split('-')[1])
@@ -22,18 +22,18 @@ class ProcessNewsArticles:
         delta = today - publishedFullDate
         return delta.days
 
-    def createNewsArticleObjects(headlines, topic_name, isLocalNews, isTrendingNews):
+    def createNewsArticleObjects(self, headlines, topic_name, isLocalNews, isTrendingNews):
         articles = []
         for i in range(len(headlines)):
             currentHeadlines = headlines[i]
-            daysOld = ProcessNewsArticles.calculateAgeOfNews(currentHeadlines)
+            daysOld = self.calculateAgeOfNews(currentHeadlines)
             article = NewsArticle(i, currentHeadlines["url"], currentHeadlines["title"], currentHeadlines["description"], currentHeadlines["source"]["name"],
                                   topic_name, daysOld, isTrendingNews, isLocalNews)
             article.processArticle()
             articles.append(article)
         return articles
 
-    def fetchTrendingStories():
+    def fetchTrendingStories(self):
         newsapi = NewsApiClient(api_key='7580ffe71bec47f7acfe7ea22d3520cc')
         articles=[]
         pytrend = TrendReq()
@@ -42,7 +42,7 @@ class ProcessNewsArticles:
         for trend in latestTrends[:5]:
             trending_news = newsapi.get_everything(q=trend,
                                                   page_size=1)
-            articles.extend(ProcessNewsArticles.createNewsArticleObjects(trending_news["articles"], "Trending", False, True))
+            articles.extend(self.createNewsArticleObjects(trending_news["articles"], "Trending", False, True))
         return articles
 
     # download articles from websites base on user's profile
@@ -59,16 +59,16 @@ class ProcessNewsArticles:
             if (topic_type == 'Profession'):
                 top_headlines = newsapi.get_top_headlines(
                                                   category=topic_name.lower(),
-                                                  country='us',
-                                                  page_size=1)
-                articles.extend(ProcessNewsArticles.createNewsArticleObjects(top_headlines["articles"], topic_name, False, False))
-                top_local_headlines = newsapi.get_top_headlines(
-                                                  category=topic_name.lower(),
-                                                  q=country,
-                                                  page_size=1)
-                articles.extend(ProcessNewsArticles.createNewsArticleObjects(top_local_headlines["articles"], topic_name, True, False))
+                                                  country=country, #'us',
+                                                  page_size=5) #1)
+                articles.extend(self.createNewsArticleObjects(top_headlines["articles"], topic_name, False, False))
+                # top_local_headlines = newsapi.get_top_headlines(
+                #                                   category=topic_name.lower(),
+                #                                   q=country,
+                #                                   page_size=1)
+                # articles.extend(self.createNewsArticleObjects(top_local_headlines["articles"], topic_name, True, False))
 
-        articles.extend(ProcessNewsArticles.fetchTrendingStories())
+        articles.extend(self.fetchTrendingStories())
         return articles
 
     def rankNewsArticles(self, aUserprofile: UserPreferences, aNewsArticles: [NewsArticle]) -> [str]:

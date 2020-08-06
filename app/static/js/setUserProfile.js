@@ -1,7 +1,7 @@
 function convertJson() {
     event.preventDefault();
     var userProfileObject = Object();
-    userProfileObject.userCountry = "Singapore";
+    userProfileObject.userCountry = $('select[name="country"]').children("option:selected").val();
     userProfileObject.userName = "chandra";
     userProfileObject.userEmail = document.getElementsByClassName('form-control email')[0].value;
     userProfileObject.userPassword = "test";
@@ -130,6 +130,9 @@ function setUserprofile(aUserProfileJSON)
 
         // set see trending news pref
         $('select[name="trendingNewsPref"]').val(profile.TrendingPref);
+
+        // set user country
+        $('select[name="country"]').children("option:selected").val(profile.country);
 
         // set news source preferences
         for(var source in profile.sourcePref)

@@ -1,21 +1,3 @@
-//$(document).ready(function(){
-//    // Topic preferences
-//    var pref = ["not related", "unlikely to be related", "not sure", "likely to be related", "related"];
-//    setPreferences(pref, ".form-control.topics");
-//
-//    // general preferences
-//    pref = ["Definitely!", "I suppose ", "No preference"];
-//    setPreferences(pref, ".form-control.general");
-//
-//    // new source preferences
-//    pref = ["I don’t want to see this source ",
-//            "I prefer not seeing this source ",
-//            "No preference ",
-//            "I prefer seeing this source ",
-//            "I only want to see this source "];
-//    setPreferences(pref, ".form-control.source");
-//});
-
 function setPreferences(aPref, aClassName){
     var select = $(aClassName);
     //console.log(aPref.length);
@@ -31,5 +13,19 @@ function setPreferences(aPref, aClassName){
             $(select[j]).append('<option value="' + aPref[i] + '" ' +  selected + '>' + aPref[i]+ '</option>');
         }
         //$(select[j]).append('<option value="' + aPref.length + '" >' + 'hello' + '</option>');
+    }
+}
+
+function setCountries(aCountries)
+{
+    var select = $(".form-control.country")[0];
+    $(select).find('optgroup, option').remove();
+
+    for(var code in aCountries)
+    {
+        var countryName = aCountries[code];
+        var selected = "";
+        if(code == "sg") { selected = "selected"; }
+        $(select).append('<option value="' + code + '" ' +  selected + '>' + countryName + '</option>');
     }
 }

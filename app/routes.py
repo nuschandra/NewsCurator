@@ -6,6 +6,7 @@ from app.model.user_preferences import UserPreferences, UserPreferencesSchema
 from app.model.topics import Topics
 from app.model.news_topics import NewsTopics
 from app.model.interest_levels import InterestLevels
+from app.model.countries import Countries
 from app import db
 from app.business.process_news_articles import ProcessNewsArticles
 
@@ -31,7 +32,7 @@ def showUserProfile():
 
     return render_template("user_profile.html", newsTopics=Markup(news_topics),
                            topicPref=Markup(topic_preferences), generalPref=Markup(general_preferences),
-                           srcPref=Markup(source_preferences),
+                           srcPref=Markup(source_preferences), countries=Markup(Countries.getCountries()),
                            userprofile=Markup(userprofileJson), userEmail=app.newsapp_active_user)
 
 @app.route("/newsarticles", methods = ["GET"])

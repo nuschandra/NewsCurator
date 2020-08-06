@@ -164,6 +164,20 @@
             </table>
         </div>
         <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table table-sm">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Please indicate your country.<br></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select onchange="addNewSources(null, {{ srcPref }})" class="form-control country" name="country"></select></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" style="margin-top: 20px;">
             <table class="table">
                 <thead class="text-uppercase">
                     <tr>
@@ -199,17 +213,18 @@
         var newsTopics = {{ newsTopics }};
         addNewsTopics(newsTopics);
 
-        var sources = null;
-        addNewSources(sources);
+        var countries = {{ countries }};
+        setCountries(countries);
 
-        var pref = {{ topicPref }};
+        var sources = null;
+        var pref = {{ srcPref }};
+        addNewSources(sources, pref);
+
+        pref = {{ topicPref }};
         setPreferences(pref, ".form-control.topics");
 
         pref = {{ generalPref }};
         setPreferences(pref, ".form-control.general");
-
-        pref = {{ srcPref }};
-        setPreferences(pref, ".form-control.source");
 
         var userprofile = {{ userprofile }};
         setUserprofile(userprofile);
