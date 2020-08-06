@@ -38,7 +38,7 @@ function setNewsArticles(aArticlesList)
                 // set topic
                 var d = new Date();
                 d.setDate(d.getDate() - article.date);
-                $("#article-topic-" + i).val(article.topic + " (" + d.toString() + ")");
+                $("#article-topic-" + i).val(article.topic + " (Published: " + formatDate(d)  + ")");
 
                 $("#article-keyword-" + i).html("keywords: " + article.keywords.join(", ")); // set keywords
                 $("#article-summary-" + i).html(article.summary); // set summary
@@ -52,8 +52,23 @@ function setNewsArticles(aArticlesList)
                 var article = JSON.parse(aArticlesList[i-1]);
                 var link = $("#article-link-" + i);
                 link.attr("href", article.url); // set link
-                link.html(article.title + " (cf: " + article.cf.toFixed(4) +")"); // set title
+                link.html("[" + article.topic + "] " + article.title + " (cf: " + article.cf.toFixed(4) +")"); // set title
             }
         }
     }
+}
+
+function formatDate(date)
+{
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('/');
 }

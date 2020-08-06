@@ -1,10 +1,11 @@
 from newspaper import Article
 from app.business.utils import EnumEncoder
 import json
+import re
 
 class NewsArticle:
     def __init__(self, aID: int, aUrl: str, aTitle: str, aDesc: str, aSource: str, aTopic, aDate: int, aIsTrending: bool, aIsLocalNews: bool,
-                 aLength: int = 1):
+                 aContent: str = None):
         self.__id = int(aID)
         self.__title = str(aTitle)
         self.__url = str(aUrl)
@@ -17,8 +18,9 @@ class NewsArticle:
 
         self.__readingSpeed = 250.0  # average reading time is 200 - 300 words per min
         self.__articleProcessed = False
-        self.content = "NewsContent"
-        self.length = aLength
+        self.content = "NewsContent" if aContent == None or len(aContent) <= 0 else aContent
+        nbrChars = re.search("\[\+([0-9]+) chars\]", aContent) if aContent != None else None
+        self.length = round((float(nbrChars.group(1)) + 200.0) / 5.1) if nbrChars != None else 1 # average no. of letters in English word = 5.1
         self.__keywords = []
         self.__summary = ""
         self.__cf = 0.0
@@ -60,8 +62,14 @@ class NewsArticle:
     @property
     def isTrending(self) -> bool: return self.__isTreading
 
+    @isTrending.setter
+    def isTrending(self, aValue: bool): self.__isTreading = aValue
+
     @property
     def isLocalNews(self) -> bool: return self.__isLocalNews
+
+    @isLocalNews.setter
+    def isLocalNews(self, aValue: bool): self.__isLocalNews = aValue
 
     @property
     def cf(self) -> float: return self.__cf

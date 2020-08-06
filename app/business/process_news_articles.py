@@ -2,7 +2,9 @@ from newsapi import NewsApiClient
 from app.business import cf_data
 from app.model.news_article import NewsArticle
 from app.business.news_rules_engine import NewsRuleEngine
+from app.business.keyword_matcher import KeywordMatcher
 from app.model.user_preferences import UserPreferences
+from app.model.countries import Countries
 from datetime import datetime, date
 from typing import Dict
 import pandas as pd
@@ -11,6 +13,7 @@ from pytrends.request import TrendReq
 class ProcessNewsArticles:
     def __init__(self):
         self.__userProfilesDB = {}
+        self.__keywordMatcher = None
 
     def calculateAgeOfNews(self, currentHeadlines):
         publishedAt = currentHeadlines["publishedAt"].split('T')[0]
@@ -28,8 +31,12 @@ class ProcessNewsArticles:
             currentHeadlines = headlines[i]
             daysOld = self.calculateAgeOfNews(currentHeadlines)
             article = NewsArticle(i, currentHeadlines["url"], currentHeadlines["title"], currentHeadlines["description"], currentHeadlines["source"]["name"],
-                                  topic_name, daysOld, isTrendingNews, isLocalNews)
+                                  topic_name, daysOld, isTrendingNews, isLocalNews, currentHeadlines["content"])
             article.processArticle()
+            # shifted this to rankNewsArticles() so that only the top 10 articles will be downloaded,
+            # this improves speed but its traded off with articles tagged using truncated content
+            matchScore = self.__keywordMatcher.computeMatchingScore(article.content)
+            article.isLocalNews = (matchScore > 0.002)
             articles.append(article)
         return articles
 
@@ -41,7 +48,7 @@ class ProcessNewsArticles:
         latestTrends = df[0].values.tolist()
         for trend in latestTrends[:5]:
             trending_news = newsapi.get_everything(q=trend,
-                                                  page_size=1)
+                                                   page_size=1)
             articles.extend(self.createNewsArticleObjects(trending_news["articles"], "Trending", False, True))
         return articles
 
@@ -49,6 +56,7 @@ class ProcessNewsArticles:
     def fetchNewsArticles(self, user_preferences: UserPreferences, aProcessArticles: bool = True) -> [NewsArticle]:
         # this is sample to download from one source
         articles = []
+        self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
         newsapi = NewsApiClient(api_key='7580ffe71bec47f7acfe7ea22d3520cc')
         print(user_preferences.topics[0].topic_name)
         
@@ -57,16 +65,23 @@ class ProcessNewsArticles:
             country = user_preferences.country
             topic_type = topic.topic_type
             if (topic_type == 'Profession'):
-                top_headlines = newsapi.get_top_headlines(
-                                                  category=topic_name.lower(),
-                                                  country=country, #'us',
-                                                  page_size=5) #1)
+                top_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
+                                                          country='us',
+                                                          page_size=2)
                 articles.extend(self.createNewsArticleObjects(top_headlines["articles"], topic_name, False, False))
-                # top_local_headlines = newsapi.get_top_headlines(
-                #                                   category=topic_name.lower(),
-                #                                   q=country,
-                #                                   page_size=1)
-                # articles.extend(self.createNewsArticleObjects(top_local_headlines["articles"], topic_name, True, False))
+
+                top_local_headlines = newsapi.get_top_headlines(
+                                                  category=topic_name.lower(),
+                                                  country=country,
+                                                  page_size=2)
+                for headline in top_local_headlines["articles"]: # remove duplicated articles
+                    duplicate = False
+                    for article in articles:
+                        if article.title == headline['title']:
+                            duplicate = True
+                            break
+                    if not duplicate:
+                        articles.extend(self.createNewsArticleObjects([headline], topic_name, True, False))
 
         articles.extend(self.fetchTrendingStories())
         return articles
@@ -79,7 +94,9 @@ class ProcessNewsArticles:
         aNewsArticles.sort(key=lambda x: x.cf, reverse=True)
 
         articlesJson = []
-        for i in range(len(aNewsArticles)): articlesJson.append(aNewsArticles[i].getJsonStr())
+        for i in range(0, max(10, len(aNewsArticles))):
+            #aNewsArticles[i].processArticle()
+            articlesJson.append(aNewsArticles[i].getJsonStr())
 
         return articlesJson
 
