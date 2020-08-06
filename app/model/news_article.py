@@ -60,8 +60,14 @@ class NewsArticle:
     @property
     def isTrending(self) -> bool: return self.__isTreading
 
+    @isTrending.setter
+    def isTrending(self, aValue: bool): self.__isTreading = aValue
+
     @property
     def isLocalNews(self) -> bool: return self.__isLocalNews
+
+    @isLocalNews.setter
+    def isLocalNews(self, aValue: bool): self.__isLocalNews = aValue
 
     @property
     def cf(self) -> float: return self.__cf

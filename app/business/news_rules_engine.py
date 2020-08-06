@@ -70,11 +70,11 @@ class NewsRuleEngine:
 
     @staticmethod
     def ruleAgePref(aUserProfile: UserPreferences, aNewsArticle: NewsArticle) -> bool:
-        topic = aNewsArticle.topic
+        topic = aNewsArticle.topic.upper()
         cf = 0.0
-        agePrefCf = Cf_Data.getAgeCf((aUserProfile.age))
-        if(topic in agePrefCf): 
-            cf = agePrefCf[aTopic]
+        agePrefCf = Cf_Data.getAgeCf(aUserProfile.age)
+        if(topic.upper() in agePrefCf):
+            cf = agePrefCf[topic]
 
         aNewsArticle.updateCf(cf)
         return True
