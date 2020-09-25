@@ -15,6 +15,7 @@ class ProcessNewsArticles:
         self.__userProfilesDB = {}
         self.__keywordMatcher = None
         self.__newsapiKey = 'fd9342e6dd8e4a0b97bab8e760382743'  # '7580ffe71bec47f7acfe7ea22d3520cc'
+        self.__latestTrends = []
 
     def calculateAgeOfNews(self, currentHeadlines):
         publishedAt = currentHeadlines["publishedAt"].split('T')[0]
@@ -25,6 +26,24 @@ class ProcessNewsArticles:
         today = datetime.utcnow().date()
         delta = today - publishedFullDate
         return delta.days
+    
+    def fetchTrendingStories(self, article):
+        articleKeywords = article.keywords
+        for index, trend in enumerate(self.__latestTrends):
+            trending_news = trend
+            trending_headline = trending_news["articles"][0] #since we are getting only one article for each trend
+            #most values below for creating the news article object are dummy values 
+            trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"], trending_headline["description"], trending_headline["source"]["name"],
+                                  "Trending", 2, False, False, trending_headline["content"])
+            trending_headline_object.processArticle()
+            trending_headline_keywords = trending_headline_object.keywords
+            print(trending_headline_keywords)
+            print(articleKeywords)
+            isTrending = self.__keywordMatcher.trendingNewsScore(trending_headline_keywords, articleKeywords)
+            if (isTrending):
+                return True
+
+        return False
 
     def createNewsArticleObjects(self, headlines, topic_name, isLocalNews, isTrendingNews):
         articles = []
@@ -42,24 +61,24 @@ class ProcessNewsArticles:
 
             matchScore = self.__keywordMatcher.computeMatchingScore(article.content)
             article.isLocalNews = (matchScore > 0.002)
+            article.isTrending = self.fetchTrendingStories(article)
             articles.append(article)
         return articles
 
-    def fetchTrendingStories(self):
+    def getTrendingNews(self):
         newsapi = NewsApiClient(api_key = self.__newsapiKey )
-        articles=[]
         pytrend = TrendReq()
         df = pytrend.trending_searches()
         latestTrends = df[0].values.tolist()
         for trend in latestTrends[:5]:
             trending_news = newsapi.get_everything(q=trend,
                                                    page_size=1)
-            articles.extend(self.createNewsArticleObjects(trending_news["articles"], "Trending", False, True))
-        return articles
+            self.__latestTrends.append(trending_news)
 
     # download articles from websites base on user's profile
     def fetchNewsArticles(self, user_preferences: UserPreferences, aProcessArticles: bool = True) -> [NewsArticle]:
         self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
+        self.getTrendingNews()
         newsapi = NewsApiClient(api_key=self.__newsapiKey)
         print(user_preferences.topics[0].topic_name)
         try:
@@ -86,8 +105,9 @@ class ProcessNewsArticles:
                                 break
                         if not duplicate:
                             articles.extend(self.createNewsArticleObjects([headline], topic_name, True, False))
-
-            articles.extend(self.fetchTrendingStories())
+            
+            #self.fetchTrendingStories(articles)
+            #articles.extend(self.fetchTrendingStories())
         except (ValueError, TypeError, NewsAPIException) as e:
             content = e.args[0] if isinstance(e, ValueError) or isinstance(e, TypeError) else e.get_message()
             article = NewsArticle(0, "", "API Error", "Error", "NewsAPI", NewsTopics.GENERAL.name, 0, False, False)

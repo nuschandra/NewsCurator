@@ -104,3 +104,23 @@ class KeywordMatcher():
         score = score / (len(articleWords) + 1)
 
         return score
+
+    def trendingNewsScore(self, trending_headline_keywords, articleKeywords):
+        stemer = LancasterStemmer()
+        count = 0
+        if (len(trending_headline_keywords) != 0 and len(articleKeywords) != 0):
+            trending_headline_keywords_stemmed = [stemer.stem(w) for w in trending_headline_keywords]
+            articleKeywords_stemmed = [stemer.stem(w) for w in articleKeywords]
+            print(trending_headline_keywords_stemmed)
+            print(articleKeywords_stemmed)
+            for i in trending_headline_keywords_stemmed:
+                for j in articleKeywords_stemmed:
+                    if (i == j):
+                        count+=1
+                
+            if(count==2):
+                return True
+            else:
+                return False             
+        else:
+            return False
