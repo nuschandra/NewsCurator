@@ -37,8 +37,6 @@ class ProcessNewsArticles:
                                   "Trending", 2, False, False, trending_headline["content"])
             trending_headline_object.processArticle()
             trending_headline_keywords = trending_headline_object.keywords
-            print(trending_headline_keywords)
-            print(articleKeywords)
             isTrending = self.__keywordMatcher.trendingNewsScore(trending_headline_keywords, articleKeywords)
             if (isTrending):
                 return True
