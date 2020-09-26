@@ -15,7 +15,7 @@ class ProcessNewsArticles:
         self.__userProfilesDB = {}
         self.__keywordMatcher = None
         self.__newsapiKey = 'fd9342e6dd8e4a0b97bab8e760382743'  # '7580ffe71bec47f7acfe7ea22d3520cc'
-        self.__latestTrends = []
+        self.__trendingArticles = []
 
     def calculateAgeOfNews(self, currentHeadlines):
         publishedAt = currentHeadlines["publishedAt"].split('T')[0]
@@ -27,17 +27,22 @@ class ProcessNewsArticles:
         delta = today - publishedFullDate
         return delta.days
     
-    def fetchTrendingStories(self, article):
+    def checkIfTrending(self, article):
         articleKeywords = article.keywords
-        for index, trend in enumerate(self.__latestTrends):
-            trending_news = trend
-            trending_headline = trending_news["articles"][0] #since we are getting only one article for each trend
-            #most values below for creating the news article object are dummy values 
-            trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"], trending_headline["description"], trending_headline["source"]["name"],
-                                  "Trending", 2, False, False, trending_headline["content"])
-            trending_headline_object.processArticle()
-            trending_headline_keywords = trending_headline_object.keywords
-            isTrending = self.__keywordMatcher.trendingNewsScore(trending_headline_keywords, articleKeywords)
+        for index, trend in enumerate(self.__trendingArticles):
+            # trending_news = trend
+            # trending_headline = trending_news["articles"][0] #since we are getting only one article for each trend
+            # daysold = self.calculateAgeOfNews(trending_headline)
+            # #most values below for creating the news article object are dummy values
+            # trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"], trending_headline["description"], trending_headline["source"]["name"],
+            #                                        "Trending", daysold, True, False, trending_headline["content"])
+            # trending_headline_object.processArticle()
+            #
+            # # call labellers for trending and local news
+            # matchScore = self.__keywordMatcher.computeMatchingScore(trending_headline_object.content)
+            # trending_headline_object.isLocalNews = (matchScore > 0.002)
+            # trending_headline_keywords = trending_headline_object.keywords
+            isTrending = self.__keywordMatcher.trendingNewsScore(trend.keywords, articleKeywords)
             if (isTrending):
                 return True
 
@@ -59,24 +64,43 @@ class ProcessNewsArticles:
 
             matchScore = self.__keywordMatcher.computeMatchingScore(article.content)
             article.isLocalNews = (matchScore > 0.002)
-            article.isTrending = self.fetchTrendingStories(article)
+            article.isTrending = self.checkIfTrending(article)
             articles.append(article)
         return articles
 
-    def getTrendingNews(self):
+    def getTrendingArticles(self):
         newsapi = NewsApiClient(api_key = self.__newsapiKey )
         pytrend = TrendReq()
         df = pytrend.trending_searches()
         latestTrends = df[0].values.tolist()
-        for trend in latestTrends[:5]:
-            trending_news = newsapi.get_everything(q=trend,
-                                                   page_size=1)
-            self.__latestTrends.append(trending_news)
+        trendingArticles = []
+        try:
+            for trend in latestTrends[:5]:
+                trending_news = newsapi.get_everything(q=trend, page_size=1)
+                trending_headline = trending_news["articles"][0]  # since we are getting only one article for each trend
+                daysold = self.calculateAgeOfNews(trending_headline)
+                trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"],
+                                                       trending_headline["description"],
+                                                       trending_headline["source"]["name"],
+                                                       "Trending", daysold, True, False, trending_headline["content"])
+                trending_headline_object.processArticle()
+
+                # call labeller for local news
+                matchScore = self.__keywordMatcher.computeMatchingScore(trending_headline_object.content)
+                trending_headline_object.isLocalNews = (matchScore > 0.002)
+
+                trendingArticles.append(trending_headline_object)
+        except (ValueError, TypeError, NewsAPIException) as e:
+            content = e.args[0] if isinstance(e, ValueError) or isinstance(e, TypeError) else e.get_message()
+            article = NewsArticle(0, "", "API Error", "Error", "NewsAPI", NewsTopics.GENERAL.name, 0, False, False)
+            article.keywords = [content]
+            trendingArticles.append(article)
+        return trendingArticles
 
     # download articles from websites base on user's profile
     def fetchNewsArticles(self, user_preferences: UserPreferences, aProcessArticles: bool = True) -> [NewsArticle]:
         self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
-        self.getTrendingNews()
+        self.__trendingArticles = self.getTrendingArticles()
         newsapi = NewsApiClient(api_key=self.__newsapiKey)
         print(user_preferences.topics[0].topic_name)
         try:
@@ -104,8 +128,8 @@ class ProcessNewsArticles:
                         if not duplicate:
                             articles.extend(self.createNewsArticleObjects([headline], topic_name, True, False))
             
-            #self.fetchTrendingStories(articles)
-            #articles.extend(self.fetchTrendingStories())
+            # self.fetchTrendingStories(articles)
+            articles.extend(self.__trendingArticles)
         except (ValueError, TypeError, NewsAPIException) as e:
             content = e.args[0] if isinstance(e, ValueError) or isinstance(e, TypeError) else e.get_message()
             article = NewsArticle(0, "", "API Error", "Error", "NewsAPI", NewsTopics.GENERAL.name, 0, False, False)
