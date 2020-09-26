@@ -1,1 +1,1 @@
-web: gunicorn newscurator:app --timeout 120
+web: gunicorn newscurator:app --timeout 600
