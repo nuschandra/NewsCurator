@@ -38,7 +38,12 @@ function setNewsArticles(aArticlesList)
                 // set topic
                 var d = new Date();
                 d.setDate(d.getDate() - article.date);
-                $("#article-topic-" + i).val(article.topic + " (Published: " + formatDate(d)  + ")");
+                var trending = '';
+                if (article.isTreading) { trending = ' | Trend'; }
+                var local = '';
+                if (article.isLocalNews) {local = ' | Local'; }
+                $("#article-topic-" + i).val('[' + article.topic + local + trending + "] (Published: " + formatDate(d)  + ")");
+                //console.log(article)
 
                 $("#article-keyword-" + i).html("keywords: " + article.keywords.join(", ")); // set keywords
                 $("#article-summary-" + i).html(article.summary); // set summary
@@ -52,7 +57,11 @@ function setNewsArticles(aArticlesList)
                 var article = JSON.parse(aArticlesList[i-1]);
                 var link = $("#article-link-" + i);
                 link.attr("href", article.url); // set link
-                link.html("[" + article.topic + "] " + article.title + " (cf: " + article.cf.toFixed(4) +")"); // set title
+                var trending = '';
+                if (article.isTreading) { trending = ' | Trend'; }
+                var local = '';
+                if (article.isLocalNews) {local = ' | Local'; }
+                link.html("[" + article.topic + local + trending + "] " + article.title + " (cf: " + article.cf.toFixed(4) +")"); // set title
             }
         }
     }

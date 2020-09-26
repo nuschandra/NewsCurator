@@ -116,7 +116,7 @@ class KeywordMatcher():
                     if (i == j):
                         count+=1
                 
-            if(count==2):
+            if(count >= 2):
                 return True
             else:
                 return False             
