@@ -113,12 +113,8 @@ class KeywordMatcher():
             articleKeywords_stemmed = [stemer.stem(w) for w in articleKeywords]
             for i in trending_headline_keywords_stemmed:
                 for j in articleKeywords_stemmed:
-                    if (i == j):
+                    if i == j:
                         count+=1
+                        if count >= 2: return True
                 
-            if(count >= 2):
-                return True
-            else:
-                return False             
-        else:
-            return False
+        return False

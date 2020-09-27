@@ -5,6 +5,7 @@ from app.business.news_rules_engine import NewsRuleEngine
 from app.business.keyword_matcher import KeywordMatcher
 from app.model.news_topics import NewsTopics
 from app.model.user_preferences import UserPreferences
+from app.model.interest_levels import InterestLevels
 from app.model.countries import Countries
 from datetime import datetime, date
 from typing import Dict
@@ -30,18 +31,6 @@ class ProcessNewsArticles:
     def checkIfTrending(self, article):
         articleKeywords = article.keywords
         for index, trend in enumerate(self.__trendingArticles):
-            # trending_news = trend
-            # trending_headline = trending_news["articles"][0] #since we are getting only one article for each trend
-            # daysold = self.calculateAgeOfNews(trending_headline)
-            # #most values below for creating the news article object are dummy values
-            # trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"], trending_headline["description"], trending_headline["source"]["name"],
-            #                                        "Trending", daysold, True, False, trending_headline["content"])
-            # trending_headline_object.processArticle()
-            #
-            # # call labellers for trending and local news
-            # matchScore = self.__keywordMatcher.computeMatchingScore(trending_headline_object.content)
-            # trending_headline_object.isLocalNews = (matchScore > 0.002)
-            # trending_headline_keywords = trending_headline_object.keywords
             isTrending = self.__keywordMatcher.trendingNewsScore(trend.keywords, articleKeywords)
             if (isTrending):
                 return True
@@ -68,7 +57,7 @@ class ProcessNewsArticles:
             articles.append(article)
         return articles
 
-    def getTrendingArticles(self):
+    def getTrendingArticles(self, keywd_matcher: KeywordMatcher):
         newsapi = NewsApiClient(api_key = self.__newsapiKey )
         pytrend = TrendReq()
         df = pytrend.trending_searches()
@@ -95,30 +84,36 @@ class ProcessNewsArticles:
             article = NewsArticle(0, "", "API Error", "Error", "NewsAPI", NewsTopics.GENERAL.name, 0, False, False)
             article.keywords = [content]
             trendingArticles.append(article)
+
         return trendingArticles
 
     # download articles from websites base on user's profile
     def fetchNewsArticles(self, user_preferences: UserPreferences, aProcessArticles: bool = True) -> [NewsArticle]:
+        country = user_preferences.country
         self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
-        self.__trendingArticles = self.getTrendingArticles()
+        self.__trendingArticles = self.getTrendingArticles(self.__keywordMatcher)
         newsapi = NewsApiClient(api_key=self.__newsapiKey)
         print(user_preferences.topics[0].topic_name)
         try:
             articles = []
             for index, topic in enumerate(user_preferences.topics):
                 topic_name = topic.topic_name
-                country = user_preferences.country
                 topic_type = topic.topic_type
+                topic_interest = topic.interest_level
+                if topic_interest == InterestLevels.AGREE.topicPreferences or topic_interest == InterestLevels.STRONGLY_AGREE.topicPreferences:
+                    pg_size = 2
+                else:
+                    pg_size = 1
                 if (topic_type == 'Profession'):
                     top_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
                                                               country='us',
-                                                              page_size=2)
+                                                              page_size=pg_size)
 
                     articles.extend(self.createNewsArticleObjects(top_headlines["articles"], topic_name, False, False))
 
                     top_local_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
                                                                     country=country,
-                                                                    page_size=2)
+                                                                    page_size=pg_size)
                     for headline in top_local_headlines["articles"]:  # remove duplicated articles
                         duplicate = False
                         for article in articles:

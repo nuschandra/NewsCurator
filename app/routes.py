@@ -1,5 +1,5 @@
 from app import app
-from flask import request, Markup, render_template, jsonify, session
+from flask import request, Markup, render_template, jsonify, session, Response
 from app.business import cf_data
 from app.model.user_preferences import UserPreferences, UserPreferencesSchema
 from app.model.user_preferences import UserPreferences, UserPreferencesSchema
@@ -37,16 +37,15 @@ def showUserProfile():
 
 @app.route("/newsarticles", methods = ["GET"])
 def showNewsArticles():
-        user_id = request.args.get('id')
-        user_profile = UserPreferences.query.filter_by(id=user_id).first()
-        print(user_profile.user_name)
-        if user_profile != None:
-            newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile)
-            articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles)
-        else:
-            articlesJson = "null"
-
-        return render_template("newsarticles.html", articles=Markup(articlesJson), userEmail=app.newsapp_active_user)
+    user_id = request.args.get('id')
+    user_profile = UserPreferences.query.filter_by(id=user_id).first()
+    print(user_profile.user_name)
+    if user_profile != None:
+        newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile)
+        articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles)
+    else:
+        articlesJson = "null"
+    return render_template("newsarticles.html", articles=Markup(articlesJson), userEmail=app.newsapp_active_user)
 
 @app.route("/")
 @app.route("/login", methods=["POST", "GET"])
