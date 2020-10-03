@@ -41,6 +41,15 @@
         </div>
     </nav>
     <form>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th id="articletype" style="text-align: center;" colspan="0">Your Reads</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
         <div class="table-responsive" id="article-1" style="margin-top: 20px;">
             <table class="table">
                 <thead>
@@ -226,6 +235,8 @@
     <script src="static/js/jquery.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <script>
+        document.getElementById('articletype').innerHTML = 'YOUR ' + localStorage.getItem('article_type').toUpperCase() + ' READS';
+
         var articles = {{ articles }};
         setNewsArticles(articles);
 

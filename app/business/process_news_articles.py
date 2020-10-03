@@ -88,7 +88,7 @@ class ProcessNewsArticles:
         return trendingArticles
 
     # download articles from websites base on user's profile
-    def fetchNewsArticles(self, user_preferences: UserPreferences, aProcessArticles: bool = True) -> [NewsArticle]:
+    def fetchNewsArticles(self, user_preferences: UserPreferences, article_type: str = 'Profession', aProcessArticles: bool = True) -> [NewsArticle]:
         country = user_preferences.country
         self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
         self.__trendingArticles = self.getTrendingArticles(self.__keywordMatcher)
@@ -104,7 +104,7 @@ class ProcessNewsArticles:
                     pg_size = 2
                 else:
                     pg_size = 1
-                if (topic_type == 'Profession'):
+                if (topic_type == article_type):
                     top_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
                                                               country='us',
                                                               page_size=pg_size)

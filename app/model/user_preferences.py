@@ -4,6 +4,7 @@ from app.model.interest_levels import InterestLevels
 from app.model.news_sources import NewsSource, NewsSourcesSchema
 from app.model.topics import Topics, TopicsSchema
 from app import db
+import json
 
 class UserPreferences(db.Model):
     __tablename__ = 'users'
@@ -36,6 +37,34 @@ class UserPreferences(db.Model):
             self.news_sources.append(NewsSource(newsSource['newsSourceName'], newsSource['userInterestLevels']))
         db.session.add(self)
         db.session.commit()
+
+    def getJsonStr(self):
+        userpreference = {}
+        userpreference['id'] = self.id
+        userpreference['userEmail'] = self.user_email
+        userpreference['age'] = self.age
+        userpreference['readingTimePref'] = self.time_to_read
+        userpreference['pastNewsPref'] = self.old_news_interest
+        userpreference['localNewsPref'] = self.local_news_interest
+        userpreference['trendingPref'] = self.popular_tweets_interest
+        userpreference['country'] = self.country
+
+        worktopics = {}
+        leisuretopics = {}
+        for topic in self.topics:
+            if topic.topic_type == 'Profession':
+                worktopics[topic.topic_name] = topic.interest_level
+            elif topic.topic_type == 'Leisure':
+                leisuretopics[topic.topic_name] = topic.interest_level
+        userpreference['workTopics'] = worktopics
+        userpreference['leisureTopics'] = leisuretopics
+
+        sources = {}
+        for source in self.news_sources:
+            sources[source.source_name] = source.interest_level
+        userpreference['sourcePref'] = sources
+
+        return json.dumps(userpreference)
 
 class UserPreferencesSchema(Schema):
     news_topics = [i.value for i in NewsTopics]

@@ -27,7 +27,8 @@ def showUserProfile():
     source_preferences = [i.sourcePreferences for i in InterestLevels]
 
     #Need to modify this once we retrieve record from database using username
-    userprofile = None
+    user_id = int(request.cookies["newscurator_userid"]) if "newscurator_userid" in request.cookies else -1
+    userprofile = UserPreferences.query.filter_by(id=user_id).first()
     userprofileJson = "null" if userprofile == None else userprofile.getJsonStr()
 
     return render_template("user_profile.html", newsTopics=Markup(news_topics),
@@ -38,10 +39,11 @@ def showUserProfile():
 @app.route("/newsarticles", methods = ["GET"])
 def showNewsArticles():
     user_id = request.args.get('id')
+    article_type = request.args.get('articletype')
     user_profile = UserPreferences.query.filter_by(id=user_id).first()
     print(user_profile.user_name)
     if user_profile != None:
-        newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile)
+        newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile, article_type)
         articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles)
     else:
         articlesJson = "null"

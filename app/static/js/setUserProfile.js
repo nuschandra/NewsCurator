@@ -14,7 +14,7 @@ function convertJson() {
     userProfileObject.popularTweetsInterest = document.getElementsByClassName('form-control general')[2].value;
     userProfileObject.newsSourcePreferences = populateNewsSourcePreferences();
     var userProfileObjectJson = JSON.stringify(userProfileObject);
-    console.log(userProfileObjectJson);
+    //console.log(userProfileObjectJson);
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
     xmlhttp.open("POST", "/userPreferences");
     xmlhttp.setRequestHeader("Content-Type", "application/json");
@@ -24,7 +24,14 @@ function convertJson() {
         if (xmlhttp.readyState == 4)
         {
             var obj = JSON.parse(xmlhttp.responseText);
-            url = window.location.protocol + "//" + window.location.host + "/newsarticles?id="+ obj['userId'];
+            document.cookie = 'newscurator_userid=' + obj['userId'] + '; SameSite=Lax';
+            if (localStorage.getItem('article_type')){
+                article_type = localStorage.getItem('article_type')
+            }
+            else{
+                article_type = 'Profession'
+            }
+            url = window.location.protocol + "//" + window.location.host + "/newsarticles?id="+ obj['userId'] + '&articletype=' + article_type;
             console.log(url);
             window.location.href = url;
         }
@@ -72,36 +79,12 @@ function populateNewsSourcePreferences() {
     return newsSourcePreferences;
 }
 
-function setUserprofile(aUserProfileJSON)
+function setUserprofile(aUserProfileJSON, aScrPref)
 {
     if(aUserProfileJSON != null)
     {
-//        "id": 6245014289670372232,
-//        "leisureTopics":
-//        {
-//            "Business": "NotSure",
-//            "Science": "NotSure",
-//            ...
-//        },
-//        "workTopics":
-//        {
-//            "Business": "NotSure",
-//            "Science": "NotSure",
-//            ...
-//        },
-//        "readingTimePref": 5,
-//        "age": 18,
-//        "pastNewsPref": "NoPreference",
-//        "LocalNewsPref": "NoPreference",
-//        "TrendingPref": "NoPreference",
-//        "sourcePref":
-//        {
-//            "CNA": "NoPreference",
-//            "The Straits Times": "NoPreference",
-//            ...
-//        }
-
         var profile = aUserProfileJSON;
+        console.log("database id:" + profile.id)
 
         // set user email
         $(".form-control.email").val(profile.userEmail);
@@ -128,13 +111,14 @@ function setUserprofile(aUserProfileJSON)
         $('select[name="pastNewsPref"]').val(profile.pastNewsPref);
 
         // set see local news pref
-        $('select[name="localNewsPref"]').val(profile.LocalNewsPref);
+        $('select[name="localNewsPref"]').val(profile.localNewsPref);
 
         // set see trending news pref
-        $('select[name="trendingNewsPref"]').val(profile.TrendingPref);
+        $('select[name="trendingNewsPref"]').val(profile.trendingPref);
 
         // set user country
-        $('select[name="country"]').children("option:selected").val(profile.country);
+        $('select[name="country"]').val(profile.country);
+        addNewSources(null, aScrPref) // change news sources based on country selected
 
         // set news source preferences
         for(var source in profile.sourcePref)
