@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="static/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="static/css/styles.css">
     <link rel="stylesheet" href="static/css/loader.css">
+    <link rel="stylesheet" href="static/css/buttons.css">
 
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/newsTopics.js"></script>
@@ -187,8 +188,10 @@
                 <tbody id="newsSourceTable"></tbody>
             </table>
         </div>
-        <button id="fetchWrkReadsBtn" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Profession');" type="submit" style="float: right;margin-right: 5px;" name="workReadsBtn" value="workReadsBtn">Fetch Work Reads</button>
-        <button id="fetchLeiReadsBtn" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Leisure');" type="submit" style="float: right;margin-right: 5px;" name="leiReadsBtn" value="leiReadsBtn">Fetch Leisure Reads</button>
+        <div class="btn-group" style="float: right;">
+            <button id="fetchWrkReadsBtn" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Profession');" type="submit" name="workReadsBtn" value="workReadsBtn">Get Work Reads</button>
+            <button id="fetchLeiReadsBtn" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Leisure');" type="submit" name="leiReadsBtn" value="leiReadsBtn">Get Leisure Reads</button>
+        </div>
 <!--        <div class="custom-control custom-control-inline custom-switch" style="float: right;margin-top: 5px;">-->
 <!--            <input class="custom-control-input" type="checkbox" id="formCheck-1" name="fetchArticles" value="true" checked="" disabled>-->
 <!--            <label class="custom-control-label" for="formCheck-1">Fetch Articles on Save</label>-->
