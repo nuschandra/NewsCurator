@@ -44,7 +44,7 @@ def showNewsArticles():
     print(user_profile.user_name)
     if user_profile != None:
         newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile, article_type)
-        articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles)
+        articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles, article_type)
     else:
         articlesJson = "null"
     return render_template("newsarticles.html", articles=Markup(articlesJson), userEmail=app.newsapp_active_user)

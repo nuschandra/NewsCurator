@@ -33,7 +33,7 @@ function setNewsArticles(aArticlesList)
                 // set link
                 var articleLink = $("#article-link-" + i);
                 articleLink.attr("href", article.url);
-                articleLink.html(article.url);
+                articleLink.html(article.url.substring(0,47) + '...');
 
                 // set topic
                 var d = new Date();

@@ -188,9 +188,19 @@
                 <tbody id="newsSourceTable"></tbody>
             </table>
         </div>
-        <div class="btn-group" style="float: right;">
-            <button id="fetchWrkReadsBtn" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Profession');" type="submit" name="workReadsBtn" value="workReadsBtn">Get Work Reads</button>
-            <button id="fetchLeiReadsBtn" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Leisure');" type="submit" name="leiReadsBtn" value="leiReadsBtn">Get Leisure Reads</button>
+        <div class="table-responsive">
+            <table class="table" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th colspan="0" style="float: right; padding: 0; margin: 2px; margin-right: 10px;">
+                            <button id="fetchWrkReadsBtn" style="margin: 2px;" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Profession');" type="submit" name="workReadsBtn" value="workReadsBtn">Get Work Reads</button>
+                            <button id="fetchLeiReadsBtn" style="margin: 2px;" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Leisure');" type="submit" name="leiReadsBtn" value="leiReadsBtn">Get Leisure Reads</button>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="btn-group" style="float: right; margin: 10px;">
         </div>
 <!--        <div class="custom-control custom-control-inline custom-switch" style="float: right;margin-top: 5px;">-->
 <!--            <input class="custom-control-input" type="checkbox" id="formCheck-1" name="fetchArticles" value="true" checked="" disabled>-->

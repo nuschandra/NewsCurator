@@ -51,13 +51,13 @@ class Cf_Data:
     def getSourcePrefCf(aSourcePref: str) -> float: # aSourcePref = Enum SourcePref
         cf = 0.0
         if(aSourcePref in Cf_Data.__sourcePrefCf): cf = Cf_Data.__sourcePrefCf[aSourcePref]
-        return cf
+        return 0.5 * cf
 
     @staticmethod
     def getGeneralPrefCf(aPreference: str) -> float:
         cf = 0.0
         if(aPreference in Cf_Data.__generalPrefCf): cf = Cf_Data.__generalPrefCf[aPreference]
-        return cf
+        return 0.75 * cf
 
     @staticmethod
     def getReadingTimeCf(aPreferredReadingTime: float) -> Dict[int, float]: # return dict[reading time, cf]
@@ -68,7 +68,11 @@ class Cf_Data:
         else:
             readingCf = Cf_Data.__readingTimeCf[99]
 
-        return readingCf
+        degradedReadingCf = {}
+        degradation = 0.25
+        keys = list(readingCf.keys())
+        for key in keys: degradedReadingCf[key] = degradation * readingCf[key] # degrade cf
+        return degradedReadingCf
 
     @staticmethod
     def getAgeCf(aAge: int) -> Dict[str, float]:
@@ -82,6 +86,7 @@ class Cf_Data:
             ageCf = Cf_Data.__ageCf[99]
 
         degradedAgeCf = {}
+        degradation = 0.25
         keys = list(ageCf.keys())
-        for key in keys: degradedAgeCf[key] = 0.2 * ageCf[key] # degrade cf taken from population survey
+        for key in keys: degradedAgeCf[key] = degradation * ageCf[key] # degrade cf taken from population survey
         return degradedAgeCf

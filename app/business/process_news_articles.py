@@ -15,7 +15,7 @@ class ProcessNewsArticles:
     def __init__(self):
         self.__userProfilesDB = {}
         self.__keywordMatcher = None
-        self.__newsapiKey = '7580ffe71bec47f7acfe7ea22d3520cc' #'fd9342e6dd8e4a0b97bab8e760382743'
+        self.__newsapiKey = 'fd9342e6dd8e4a0b97bab8e760382743' #'7580ffe71bec47f7acfe7ea22d3520cc'
         self.__trendingArticles = []
 
     def calculateAgeOfNews(self, currentHeadlines):
@@ -132,10 +132,10 @@ class ProcessNewsArticles:
             articles = [article]
         return articles
 
-    def rankNewsArticles(self, aUserprofile: UserPreferences, aNewsArticles: [NewsArticle]) -> [str]:
+    def rankNewsArticles(self, aUserprofile: UserPreferences, aNewsArticles: [NewsArticle], aArticleType: str = 'Profession') -> [str]:
         for i in range(len(aNewsArticles)):
             article = aNewsArticles[i]
-            NewsRuleEngine.fireAllRules(aUserprofile, article)
+            NewsRuleEngine.fireAllRules(aUserprofile, article, aArticleType)
 
         aNewsArticles.sort(key=lambda x: x.cf, reverse=True)
 
