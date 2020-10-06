@@ -26,7 +26,7 @@ An Intelligent Systems that automatically scours the web for news articles relev
 
 Link to video TBC
 
-## SECTION 5 : USER GUIDE & Installation Guide 
+## SECTION 5 : USER GUIDE & INSTALLATION GUIDE
 
 Included in Project Report
 
