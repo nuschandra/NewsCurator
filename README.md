@@ -14,11 +14,11 @@ An Intelligent Systems that automatically scours the web for news articles relev
 
 ## SECTION 3 : CREDITS / PROJECT CONTRIBUTION
 
-| Official Full Name  | Student ID | Work Items (Who Did What) | Email (Optional) |
+| Official Full Name  | Student ID | Who Did What | Email |
 | :------------ |:---------------:| :-----| :-----|
-| Chen Mingyi Edmund | A1234567Z | TBC | e0535232@u.nus.edu |
-| Viswanathan Chandrashekar | A1234567Z | TBC | e0535243@u.nus.edu|
-| Cheng Yunfeng | A1234567Z | TBC | e0535410@u.nus.edu|
+| Chen Mingyi Edmund | A0031105E | TBC | e0535232@u.nus.edu |
+| Viswanathan Chandrashekar | A0088591N | TBC | e0535243@u.nus.edu|
+| Cheng Yunfeng | A0215320Y | TBC | e0535410@u.nus.edu|
 
 ---
 
