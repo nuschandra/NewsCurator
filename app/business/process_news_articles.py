@@ -104,9 +104,9 @@ class ProcessNewsArticles:
         sumtotal = sum(distribution.values())
         for key in distribution.keys():
             if distribution[key] == 2:
-                distribution[key] = int(math.ceil((distribution[key] / sumtotal) * 10))
+                distribution[key] = int(math.ceil((distribution[key] / sumtotal) * 10)) if sumtotal > 0 else 0
             else:
-                distribution[key] = int(math.floor((distribution[key] / sumtotal) * 10))
+                distribution[key] = int(math.floor((distribution[key] / sumtotal) * 10)) if sumtotal > 0 else 0
 
         return distribution
 
