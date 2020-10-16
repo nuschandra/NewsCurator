@@ -12,6 +12,18 @@ from app.business.process_news_articles import ProcessNewsArticles
 
 users = []
 
+def retrieveTopicsAndPreferencesToShow():
+    news_topics = [i.value for i in NewsTopics]
+    general_preferences = [i.generalPreferences for i in InterestLevels]
+    topic_preferences = [i.topicPreferences for i in InterestLevels]
+    source_preferences = [i.sourcePreferences for i in InterestLevels]
+
+    #Need to modify this once we retrieve record from database using username
+    userprofile = None
+    userprofileJson = "null" if userprofile == None else userprofile.getJsonStr()
+
+    return news_topics, general_preferences, topic_preferences, source_preferences, userprofileJson
+
 @app.route('/userPreferences', methods = ['POST'])
 def createUserPreferences():
     user_id = UserPreferencesSchema().load(request.get_json())
@@ -21,14 +33,7 @@ def createUserPreferences():
 
 @app.route("/userProfile", methods=["GET"])
 def showUserProfile():
-    news_topics = [i.value for i in NewsTopics]
-    general_preferences = [i.generalPreferences for i in InterestLevels]
-    topic_preferences = [i.topicPreferences for i in InterestLevels]
-    source_preferences = [i.sourcePreferences for i in InterestLevels]
-
-    #Need to modify this once we retrieve record from database using username
-    userprofile = None
-    userprofileJson = "null" if userprofile == None else userprofile.getJsonStr()
+    news_topics, general_preferences, topic_preferences, source_preferences, userprofileJson = retrieveTopicsAndPreferencesToShow()
 
     return render_template("user_profile.html", newsTopics=Markup(news_topics),
                            topicPref=Markup(topic_preferences), generalPref=Markup(general_preferences),
@@ -50,10 +55,16 @@ def showNewsArticles():
 @app.route("/")
 @app.route("/login", methods=["POST", "GET"])
 def showLogin():
+    news_topics, general_preferences, topic_preferences, source_preferences, userprofileJson = retrieveTopicsAndPreferencesToShow()
+
     if request.method == "POST":
         if request.form["submitBtn"] == "signIn":
             session["USEREMAIL"] = request.form["email"]
             app.newsapp_active_user = session["USEREMAIL"]
+            return render_template("user_profile.html", newsTopics=Markup(news_topics),
+                           topicPref=Markup(topic_preferences), generalPref=Markup(general_preferences),
+                           srcPref=Markup(source_preferences), countries=Markup(Countries.getCountries()),
+                           userprofile=Markup(userprofileJson), userEmail=app.newsapp_active_user)
         elif request.form["submitBtn"] == "signOut":
             session.pop("USEREMAIL", None)
             app.newsapp_active_user = ""
