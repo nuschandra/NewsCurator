@@ -81,3 +81,25 @@ function formatDate(date)
 
     return [year, month, day].join('/');
 }
+
+function fetchWorkArticles()
+{
+    var userId = document.cookie;
+    var elements = userId.split('=');
+    var id = elements[1]
+    console.log(id)
+    url = window.location.protocol + "//" + window.location.host + "/newsarticles?id="+ id + '&articletype=Profession';
+    console.log(url);
+    window.location.href = url;
+}
+
+function fetchLeisureArticles()
+{
+    var userId = document.cookie;
+    var elements = userId.split('=');
+    var id = elements[1]
+    console.log(id)
+    url = window.location.protocol + "//" + window.location.host + "/newsarticles?id="+ id + '&articletype=Leisure';
+    console.log(url);
+    window.location.href = url;
+}

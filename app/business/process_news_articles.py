@@ -17,7 +17,7 @@ class ProcessNewsArticles:
     def __init__(self):
         self.__userProfilesDB = {}
         self.__keywordMatcher = None
-        self.__newsapiKey = 'fd9342e6dd8e4a0b97bab8e760382743' #'7580ffe71bec47f7acfe7ea22d3520cc'
+        self.__newsapiKey = '7580ffe71bec47f7acfe7ea22d3520cc' # 'fd9342e6dd8e4a0b97bab8e760382743'
         self.__trendingArticles = []
 
     def calculateAgeOfNews(self, currentHeadlines):
