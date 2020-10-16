@@ -1,25 +1,5 @@
 function setNewsArticles(aArticlesList)
 {
-//    {
-//    "id": 0,
-//    "title": "news title",
-//    "url": "error url",
-//    "description": "news Desc",
-//    "source": "News Source",
-//    "topic": "Health",
-//    "date": 3,
-//    "isTreading": true,
-//    "isLocalNews": true,
-//    "readingSpeed": 250.0,
-//    "articleProcessed": true,
-//    "content": "Sample Content",
-//    "length": 2,
-//    "readingTime_min": 0.008,
-//    "keywords": ["a", "b"],
-//    "summary": "",
-//    "cf": 0.6456000000000001
-//    }
-
     if(aArticlesList != null)
     {
         for(var i = 1; i <= 5; i++)
@@ -82,12 +62,31 @@ function formatDate(date)
     return [year, month, day].join('/');
 }
 
+function getCookie(cname)
+{
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++)
+  {
+    var c = ca[i];
+    while (c.charAt(0) == ' ')
+    {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) { return c.substring(name.length, c.length); }
+  }
+  return "";
+}
+
 function fetchWorkArticles()
 {
-    var userId = document.cookie;
-    var elements = userId.split('=');
-    var id = elements[1]
+    //var userId = document.cookie;
+    //var elements = userId.split('=');
+    //var id = elements[1]
+    var id = getCookie("newscurator_userid")
     console.log(id)
+    localStorage.setItem('article_type', 'Profession');
     url = window.location.protocol + "//" + window.location.host + "/newsarticles?id="+ id + '&articletype=Profession';
     console.log(url);
     window.location.href = url;
@@ -95,11 +94,25 @@ function fetchWorkArticles()
 
 function fetchLeisureArticles()
 {
-    var userId = document.cookie;
-    var elements = userId.split('=');
-    var id = elements[1]
+    //var userId = document.cookie;
+    //var elements = userId.split('=');
+    //var id = elements[1]
+    var id = getCookie("newscurator_userid")
     console.log(id)
+    localStorage.setItem('article_type', 'Leisure');
     url = window.location.protocol + "//" + window.location.host + "/newsarticles?id="+ id + '&articletype=Leisure';
     console.log(url);
     window.location.href = url;
+}
+
+function activateWorkLeisureLink()
+{
+    if (localStorage.getItem('article_type').toUpperCase() == "PROFESSION") {
+        $("#workarticles-link").attr('class', 'nav-link active');
+        $("#leisurearticles-link").attr('class', 'nav-link');
+    }
+    else{
+        $("#workarticles-link").attr('class', 'nav-link');
+        $("#leisurearticles-link").attr('class', 'nav-link active');
+    }
 }

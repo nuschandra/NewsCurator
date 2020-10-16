@@ -25,9 +25,9 @@
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link " href="/userProfile">Your Profile</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('', 'mainform')" href="/newsarticles">Your Work Reads</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('', '')" href="/userprofile">Your Leisure Reads</a></li>
+                    <li class="nav-item" role="presentation"><a id="userprofile-link" class="nav-link active" href="/userProfile">Your Profile</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('', 'mainform')" href="#">Your Work Reads</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" onclick="showLoading('', '')" href="#">Your Leisure Reads</a></li>
                     <li class="nav-item dropdown" style="display: none;"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Placeholder Dropdown </a>
                         <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
                     </li>
@@ -60,7 +60,7 @@
             <h2 class="sr-only">Login Form</h2>
             <div class="illustration"><i class="icon ion-ios-navigate" style="color: rgb(105,215,215);"></i></div>
             <input type="hidden" name="hiddenEmail" value={{ userEmail }} />
-            <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email" value="{{ userEmail }}"></div>
+            <div class="form-group"><input class="form-control" type="email" name="email" required placeholder="Email" value="{{ userEmail }}"></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password" style="display: none;"></div>
             <div class="form-group signInBtn"><button class="btn btn-primary btn-block" name="submitBtn" value="signIn" type="submit" style="background-color: rgb(105,215,215);">Log In</button></div>
             <div class="form-group signOutBtn"><button class="btn btn-primary btn-block" name="submitBtn" value="signOut" type="submit" style="background-color: rgb(105,215,215);">Log Out</button></div>
@@ -85,6 +85,7 @@
     <script>
         toggleLoginIcon();
         toggleLoginButton();
+        activateProfileLink();
     </script>
 </body>
 
