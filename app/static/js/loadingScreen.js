@@ -1,18 +1,20 @@
-function showLoading(senderId, idToHide)
+function showLoading(idToHide)
 {
-    if(senderId == "saveProfileBtn")
-    {
-        if($("#formCheck-1"). prop("checked") == true)
-        {
-            $("#loadingScreen").css("display", "block");
-            $("#" + idToHide).css("display", "none");
-        }
-    }
-    else
-    {
-        $("#loadingScreen").css("display", "block");
-        $("#" + idToHide).css("display", "none");
-    }
+    $("#loadingScreen").css("display", "block");
+    $("#" + idToHide).css("display", "none");
+//    if(senderId == "saveProfileBtn")
+//    {
+//        if($("#formCheck-1"). prop("checked") == true)
+//        {
+//            $("#loadingScreen").css("display", "block");
+//            $("#" + idToHide).css("display", "none");
+//        }
+//    }
+//    else
+//    {
+//        $("#loadingScreen").css("display", "block");
+//        $("#" + idToHide).css("display", "none");
+//    }
     return true;
 }
 

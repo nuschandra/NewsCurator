@@ -1,0 +1,14 @@
+.btn-group button {
+    width: fit-content;
+    margin-right: 5px;
+    border: 1px solid blue; /* blue border */
+}
+
+.btn-group button:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e538e;
+}

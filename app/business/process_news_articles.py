@@ -10,12 +10,14 @@ from app.model.countries import Countries
 from datetime import datetime, date
 from typing import Dict
 from pytrends.request import TrendReq
+import random
+import math
 
 class ProcessNewsArticles:
     def __init__(self):
         self.__userProfilesDB = {}
         self.__keywordMatcher = None
-        self.__newsapiKey = '7580ffe71bec47f7acfe7ea22d3520cc' #'fd9342e6dd8e4a0b97bab8e760382743'
+        self.__newsapiKey = 'fd9342e6dd8e4a0b97bab8e760382743' #'7580ffe71bec47f7acfe7ea22d3520cc'
         self.__trendingArticles = []
 
     def calculateAgeOfNews(self, currentHeadlines):
@@ -37,13 +39,13 @@ class ProcessNewsArticles:
 
         return False
 
-    def createNewsArticleObjects(self, headlines, topic_name, isLocalNews, isTrendingNews):
+    def createNewsArticleObjects(self, headlines, topic_name):
         articles = []
         for i in range(len(headlines)):
             currentHeadlines = headlines[i]
             daysOld = self.calculateAgeOfNews(currentHeadlines)
             article = NewsArticle(i, currentHeadlines["url"], currentHeadlines["title"], currentHeadlines["description"], currentHeadlines["source"]["name"],
-                                  topic_name, daysOld, isTrendingNews, isLocalNews, currentHeadlines["content"])
+                                  topic_name, daysOld, False, False, currentHeadlines["content"])
 
             # shifted processArticle() to rankNewsArticles() so that only the top 10 articles will be
             # downloaded, this improves speed but its traded off with articles tagged using truncated content
@@ -87,43 +89,64 @@ class ProcessNewsArticles:
 
         return trendingArticles
 
+    def getTopicDistribution(self, user_preferences: UserPreferences, article_type: str):
+        distribution = {}
+        for topic in user_preferences.topics:
+            if topic.topic_type == article_type:
+                topic_interest = topic.interest_level
+                if topic_interest == InterestLevels.AGREE.topicPreferences or topic_interest == InterestLevels.STRONGLY_AGREE.topicPreferences:
+                    distribution[topic.topic_name] = 2
+                elif topic_interest == InterestLevels.NOT_SURE.topicPreferences or topic_interest == InterestLevels.DISAGREE.topicPreferences:
+                    distribution[topic.topic_name] = 1
+                else:
+                    distribution[topic.topic_name] = 0
+
+        sumtotal = sum(distribution.values())
+        for key in distribution.keys():
+            if distribution[key] == 2:
+                distribution[key] = int(math.ceil((distribution[key] / sumtotal) * 10)) if sumtotal > 0 else 0
+            else:
+                distribution[key] = int(math.floor((distribution[key] / sumtotal) * 10)) if sumtotal > 0 else 0
+
+        return distribution
+
+    def removeDuplicatedHeadlines(self, headlines, currentArticles: [NewsArticle]):
+        for i in range(len(headlines)-1, -1, -1): # remove duplicated articles
+            headline = headlines[i]
+            for article in currentArticles:
+                if article.title == headline['title']:
+                    headlines.remove(headline)
+                    break
+        return headlines
+
     # download articles from websites base on user's profile
-    def fetchNewsArticles(self, user_preferences: UserPreferences, aProcessArticles: bool = True) -> [NewsArticle]:
+    def fetchNewsArticles(self, user_preferences: UserPreferences, article_type: str = 'Profession', aProcessArticles: bool = True) -> [NewsArticle]:
         country = user_preferences.country
         self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
         self.__trendingArticles = self.getTrendingArticles(self.__keywordMatcher)
         newsapi = NewsApiClient(api_key=self.__newsapiKey)
-        print(user_preferences.topics[0].topic_name)
+        # print(user_preferences.topics[0].topic_name)
+        topicDistri = self.getTopicDistribution(user_preferences, article_type)
         try:
             articles = []
-            for index, topic in enumerate(user_preferences.topics):
+            for index, topic in enumerate(random.sample(user_preferences.topics, len(user_preferences.topics))):
+                if len(articles) >= 20: break
                 topic_name = topic.topic_name
-                topic_type = topic.topic_type
-                topic_interest = topic.interest_level
-                if topic_interest == InterestLevels.AGREE.topicPreferences or topic_interest == InterestLevels.STRONGLY_AGREE.topicPreferences:
-                    pg_size = 2
-                else:
-                    pg_size = 1
-                if (topic_type == 'Profession'):
+                pg_size = topicDistri[topic_name]
+                if country == 'us': pg_size = 2 * pg_size
+                if topic.topic_type == article_type and pg_size > 0:
                     top_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
                                                               country='us',
                                                               page_size=pg_size)
+                    articles.extend(self.createNewsArticleObjects(top_headlines["articles"], topic_name))
 
-                    articles.extend(self.createNewsArticleObjects(top_headlines["articles"], topic_name, False, False))
+                    if country != 'us':
+                        top_local_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
+                                                                        country=country,
+                                                                        page_size=pg_size)
+                        self.removeDuplicatedHeadlines(top_local_headlines["articles"], articles)
+                        articles.extend(self.createNewsArticleObjects(top_local_headlines["articles"], topic_name))
 
-                    top_local_headlines = newsapi.get_top_headlines(category=topic_name.lower(),
-                                                                    country=country,
-                                                                    page_size=pg_size)
-                    for headline in top_local_headlines["articles"]:  # remove duplicated articles
-                        duplicate = False
-                        for article in articles:
-                            if article.title == headline['title']:
-                                duplicate = True
-                                break
-                        if not duplicate:
-                            articles.extend(self.createNewsArticleObjects([headline], topic_name, True, False))
-            
-            # self.fetchTrendingStories(articles)
             articles.extend(self.__trendingArticles)
         except (ValueError, TypeError, NewsAPIException) as e:
             content = e.args[0] if isinstance(e, ValueError) or isinstance(e, TypeError) else e.get_message()
@@ -132,10 +155,10 @@ class ProcessNewsArticles:
             articles = [article]
         return articles
 
-    def rankNewsArticles(self, aUserprofile: UserPreferences, aNewsArticles: [NewsArticle]) -> [str]:
+    def rankNewsArticles(self, aUserprofile: UserPreferences, aNewsArticles: [NewsArticle], aArticleType: str = 'Profession') -> [str]:
         for i in range(len(aNewsArticles)):
             article = aNewsArticles[i]
-            NewsRuleEngine.fireAllRules(aUserprofile, article)
+            NewsRuleEngine.fireAllRules(aUserprofile, article, aArticleType)
 
         aNewsArticles.sort(key=lambda x: x.cf, reverse=True)
 

@@ -9,11 +9,13 @@ class NewsRuleEngine:
     def __init__(self): return
 
     @staticmethod
-    def fireAllRules(aUserProfile: UserPreferences, aNewsArticle: NewsArticle) -> int:
+    def fireAllRules(aUserProfile: UserPreferences, aNewsArticle: NewsArticle, aArticleType: str = 'Profession') -> int:
         rulesFired = 0
 
-        if (NewsRuleEngine.ruleWorkTopic(aUserProfile, aNewsArticle)): rulesFired += 1
-        if (NewsRuleEngine.ruleLeisureTopic(aUserProfile, aNewsArticle)): rulesFired += 1
+        if aArticleType=='Profession':
+            if (NewsRuleEngine.ruleWorkTopic(aUserProfile, aNewsArticle)): rulesFired += 1
+        elif aArticleType == 'Leisure':
+            if (NewsRuleEngine.ruleLeisureTopic(aUserProfile, aNewsArticle)): rulesFired += 1
         if (NewsRuleEngine.ruleReadingTime(aUserProfile, aNewsArticle)): rulesFired += 1
         if (NewsRuleEngine.ruleAgePref(aUserProfile, aNewsArticle)): rulesFired += 1
         if (NewsRuleEngine.ruleSeePastNews(aUserProfile, aNewsArticle)): rulesFired += 1

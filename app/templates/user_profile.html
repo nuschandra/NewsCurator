@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="static/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="static/css/styles.css">
     <link rel="stylesheet" href="static/css/loader.css">
+    <link rel="stylesheet" href="static/css/buttons.css">
 
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/newsTopics.js"></script>
@@ -58,7 +59,7 @@
             <div><strong>Scouring The Web For Your Articles</strong></div>
         </div>
     </div>
-    <form id="mainform" onSubmit="return (showLoading('saveProfileBtn', 'mainform') && convertJson())" action="" method="">
+    <form id="mainform" onSubmit="return (showLoading('mainform') && convertJson())" action="" method="">
         <div class="table-responsive" style="margin-top: 20px;">
             <table class="table table-sm">
                 <thead class="text-uppercase">
@@ -187,12 +188,24 @@
                 <tbody id="newsSourceTable"></tbody>
             </table>
         </div>
-        <button id="saveProfileBtn" class="btn btn-primary" onclick="" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="save">Save</button>
-<!--        <button class="btn btn-primary" type="submit" style="float: right;margin-right: 5px;" name="submitBtn" value="saveAndSubmit">Save</button>-->
-        <div class="custom-control custom-control-inline custom-switch" style="float: right;margin-top: 5px;">
-            <input class="custom-control-input" type="checkbox" id="formCheck-1" name="fetchArticles" value="true" checked="" disabled>
-            <label class="custom-control-label" for="formCheck-1">Fetch Articles on Save</label>
+        <div class="table-responsive">
+            <table class="table" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th colspan="0" style="float: right; padding: 0; margin: 2px; margin-right: 10px;">
+                            <button id="fetchWrkReadsBtn" style="margin: 2px;" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Profession');" type="submit" name="workReadsBtn" value="workReadsBtn">Get Work Reads</button>
+                            <button id="fetchLeiReadsBtn" style="margin: 2px;" class="btn btn-primary" onclick="localStorage.setItem('article_type', 'Leisure');" type="submit" name="leiReadsBtn" value="leiReadsBtn">Get Leisure Reads</button>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
         </div>
+        <div class="btn-group" style="float: right; margin: 10px;">
+        </div>
+<!--        <div class="custom-control custom-control-inline custom-switch" style="float: right;margin-top: 5px;">-->
+<!--            <input class="custom-control-input" type="checkbox" id="formCheck-1" name="fetchArticles" value="true" checked="" disabled>-->
+<!--            <label class="custom-control-label" for="formCheck-1">Fetch Articles on Save</label>-->
+<!--        </div>-->
     </form>
     <div class="footer-basic">
         <footer>
@@ -220,8 +233,8 @@
         setCountries(countries);
 
         var sources = null;
-        var pref = {{ srcPref }};
-        addNewSources(sources, pref);
+        var scr_pref = {{ srcPref }};
+        addNewSources(sources, scr_pref);
 
         pref = {{ topicPref }};
         setPreferences(pref, ".form-control.topics");
@@ -230,7 +243,7 @@
         setPreferences(pref, ".form-control.general");
 
         var userprofile = {{ userprofile }};
-        setUserprofile(userprofile);
+        setUserprofile(userprofile, scr_pref);
 
         toggleLoginIcon();
     </script>

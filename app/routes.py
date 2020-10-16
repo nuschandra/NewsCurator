@@ -43,11 +43,12 @@ def showUserProfile():
 @app.route("/newsarticles", methods = ["GET"])
 def showNewsArticles():
     user_id = request.args.get('id')
+    article_type = request.args.get('articletype')
     user_profile = UserPreferences.query.filter_by(id=user_id).first()
     print(user_profile.user_name)
     if user_profile != None:
-        newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile)
-        articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles)
+        newsArticles = ProcessNewsArticles().fetchNewsArticles(user_profile, article_type)
+        articlesJson = ProcessNewsArticles().rankNewsArticles(user_profile, newsArticles, article_type)
     else:
         articlesJson = "null"
     return render_template("newsarticles.html", articles=Markup(articlesJson), userEmail=app.newsapp_active_user)
