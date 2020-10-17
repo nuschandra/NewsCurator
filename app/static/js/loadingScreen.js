@@ -36,11 +36,13 @@ function toggleLoginButton()
     {
         $(".form-group.signInBtn").css("display", "none");
         $(".form-group.signOutBtn").css("display", "block");
+        $("#userEmail_form").prop("readonly", true);
     }
     else
     {
         $(".form-group.signInBtn").css("display", "block");
         $(".form-group.signOutBtn").css("display", "none");
+        $("#userEmail_form").prop("readonly", false);
     }
 }
 

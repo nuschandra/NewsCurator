@@ -59,7 +59,7 @@ class ProcessNewsArticles:
             articles.append(article)
         return articles
 
-    def getTrendingArticles(self, keywd_matcher: KeywordMatcher):
+    def fetchTrendingArticles(self, keywd_matcher: KeywordMatcher):
         newsapi = NewsApiClient(api_key = self.__newsapiKey )
         pytrend = TrendReq()
         df = pytrend.trending_searches()
@@ -68,19 +68,20 @@ class ProcessNewsArticles:
         try:
             for trend in latestTrends[:5]:
                 trending_news = newsapi.get_everything(q=trend, page_size=1)
-                trending_headline = trending_news["articles"][0]  # since we are getting only one article for each trend
-                daysold = self.calculateAgeOfNews(trending_headline)
-                trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"],
-                                                       trending_headline["description"],
-                                                       trending_headline["source"]["name"],
-                                                       "Trending", daysold, True, False, trending_headline["content"])
-                trending_headline_object.processArticle()
+                if len(trending_news["articles"]) > 0:
+                    trending_headline = trending_news["articles"][0]  # since we are getting only one article for each trend
+                    daysold = self.calculateAgeOfNews(trending_headline)
+                    trending_headline_object = NewsArticle(0, trending_headline["url"], trending_headline["title"],
+                                                           trending_headline["description"],
+                                                           trending_headline["source"]["name"],
+                                                           "Trending", daysold, True, False, trending_headline["content"])
+                    trending_headline_object.processArticle()
 
-                # call labeller for local news
-                matchScore = self.__keywordMatcher.computeMatchingScore(trending_headline_object.content)
-                trending_headline_object.isLocalNews = (matchScore > 0.002)
+                    # call labeller for local news
+                    matchScore = self.__keywordMatcher.computeMatchingScore(trending_headline_object.content)
+                    trending_headline_object.isLocalNews = (matchScore > 0.002)
 
-                trendingArticles.append(trending_headline_object)
+                    trendingArticles.append(trending_headline_object)
         except (ValueError, TypeError, NewsAPIException) as e:
             content = e.args[0] if isinstance(e, ValueError) or isinstance(e, TypeError) else e.get_message()
             article = NewsArticle(0, "", "API Error", "Error", "NewsAPI", NewsTopics.GENERAL.name, 0, False, False)
@@ -123,7 +124,7 @@ class ProcessNewsArticles:
     def fetchNewsArticles(self, user_preferences: UserPreferences, article_type: str = 'Profession', aProcessArticles: bool = True) -> [NewsArticle]:
         country = user_preferences.country
         self.__keywordMatcher = KeywordMatcher(Countries.getCountries()[user_preferences.country])
-        self.__trendingArticles = self.getTrendingArticles(self.__keywordMatcher)
+        self.__trendingArticles = self.fetchTrendingArticles(self.__keywordMatcher)
         newsapi = NewsApiClient(api_key=self.__newsapiKey)
         # print(user_preferences.topics[0].topic_name)
         topicDistri = self.getTopicDistribution(user_preferences, article_type)
