@@ -14,29 +14,22 @@ An Intelligent Systems that automatically scours the web for news articles relev
 
 ## SECTION 3 : CREDITS / PROJECT CONTRIBUTION
 
-| Full Name  | Student ID | Who Did What | Email |
-| :------------ |:---------------:| :-----| :-----|
-| Chen Mingyi Edmund | A0031105E | TBC | e0535232@u.nus.edu |
-| Viswanathan Chandrashekar | A0088591N | TBC | e0535243@u.nus.edu|
-| Cheng Yunfeng | A0215320Y | TBC | e0535410@u.nus.edu|
+| Full Name  | Student ID | Email |
+| :------------ |:---------------:| :-----|
+| Chen Mingyi Edmund | A0031105E | e0535232@u.nus.edu |
+| Viswanathan Chandrashekar | A0088591N | e0535243@u.nus.edu|
+| Cheng Yunfeng | A0215320Y | e0535410@u.nus.edu|
 
 ---
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
 
-Link to video TBC
+<a href="ProjectReport/Promotional Video.mp4">Promotional Video</a><br>
+<a href="ProjectReport/Application Demo Video.mp4">Application Demo</a>
 
 ## SECTION 5 : USER GUIDE & INSTALLATION GUIDE
 
-Included in Project Report
-
-**Remote Installation**
-
-We have deployed our application for easy access at URL   https://mrpm-ay2021-newscurator.herokuapp.com/
-
-**Local Installation**
-
-TBC
+`Refer to project report at Github Folder: ProjectReport`
 
 ---
 ## SECTION 6 : PROJECT REPORT / PAPER
