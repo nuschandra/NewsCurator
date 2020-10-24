@@ -24,8 +24,8 @@ An Intelligent Systems that automatically scours the web for news articles relev
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
 
-<a href="ProjectReport/Promotional Video.mp4">Promotional Video</a><br>
-<a href="ProjectReport/Application Demo Video.mp4">Application Demo</a>
+<a href="Video/Video_Promotional Advertisement.mp4">Promotional Video</a><br>
+<a href="Video/Video_Application Demo.mp4">Application Demo</a>
 
 ## SECTION 5 : USER GUIDE & INSTALLATION GUIDE
 
