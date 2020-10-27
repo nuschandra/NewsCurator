@@ -13,11 +13,12 @@ from pytrends.request import TrendReq
 import random
 import math
 
+# VALID NEWS API KEYS: '1c190720995145afb28e31ee299cb526' '679debc5c5dc4cb8b4ab551bcfbf35ce' '7580ffe71bec47f7acfe7ea22d3520cc' 'fd9342e6dd8e4a0b97bab8e760382743'
 class ProcessNewsArticles:
     def __init__(self):
         self.__userProfilesDB = {}
         self.__keywordMatcher = None
-        self.__newsapiKey = '7580ffe71bec47f7acfe7ea22d3520cc' # 'fd9342e6dd8e4a0b97bab8e760382743'
+        self.__newsapiKey = '1c190720995145afb28e31ee299cb526'
         self.__trendingArticles = []
 
     def calculateAgeOfNews(self, currentHeadlines):

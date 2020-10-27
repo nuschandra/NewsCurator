@@ -115,6 +115,6 @@ class KeywordMatcher():
                 for j in articleKeywords_stemmed:
                     if i == j:
                         count+=1
-                        if count >= 2: return True
+                        if count >= 5: return True
                 
         return False
